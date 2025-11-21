@@ -1,82 +1,105 @@
-# Lightweight React Template for KAVIA
+# Ocean Professional React Frontend
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+A modern, Figma-inspired React frontend scaffold featuring a header, sidebar navigation, and main content area. Styled per the Ocean Professional theme.
 
-## Features
+## Quick Start
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+- `npm install`
+- `npm start`
+- Visit http://localhost:3000
 
-## Getting Started
+## Structure
 
-In the project directory, you can run:
+- `src/theme/`
+  - `tokens.js` — theme tokens (colors, radii, spacing, shadows, typography)
+  - `ThemeProvider.js` — injects tokens as CSS variables and provides `getEnv`
+- `src/styles/`
+  - `global.css` — global/base styles, gradient background, utilities
+- `src/components/ui/`
+  - `Button.js`, `button.css` — primary, secondary, ghost variants
+  - `Card.js`, `card.css` — surface container with header/body/footer
+  - `Icon.js` — wrapper for SVG/emoji icons
+- `src/components/layout/`
+  - `Header.js`, `header.css`
+  - `Sidebar.js`, `sidebar.css`
+  - `AppShell.js`, `appshell.css`
+- `src/pages/`
+  - `Dashboard.js` — default route
+  - `StyleGuide.js` — visualize tokens/components
+  - `Placeholder.js` — scaffold for future features
+- `src/App.js` — routes + layout wiring
+- `src/index.js` — app entrypoint
 
-### `npm start`
+## Theme
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Ocean Professional style guide:
+- Primary: `#2563EB`
+- Secondary/Success: `#F59E0B`
+- Error: `#EF4444`
+- Background: `#f9fafb`
+- Surface: `#ffffff`
+- Text: `#111827`
+- Subtle gradient accents are applied to backgrounds and headers.
 
-### `npm test`
+Theme tokens live in `src/theme/tokens.js`. They are injected as CSS variables by `src/theme/ThemeProvider.js`.
 
-Launches the test runner in interactive watch mode.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-## Customization
-
-### Colors
-
-The main brand colors are defined as CSS variables in `src/App.css`:
-
+To use a token in CSS:
 ```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
+color: var(--color-primary);
+border-radius: var(--radius-md);
+box-shadow: var(--shadow-md);
 ```
 
-### Components
+## Environment Variables
 
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
+Do not hardcode configuration. Use CRA-style variables:
+- `process.env.REACT_APP_API_BASE`
+- `process.env.REACT_APP_BACKEND_URL`
+- `process.env.REACT_APP_FRONTEND_URL`
+- `process.env.REACT_APP_WS_URL`
+- `process.env.REACT_APP_NODE_ENV`
+- `process.env.REACT_APP_NEXT_TELEMETRY_DISABLED`
+- `process.env.REACT_APP_ENABLE_SOURCE_MAPS`
+- `process.env.REACT_APP_PORT`
+- `process.env.REACT_APP_TRUST_PROXY`
+- `process.env.REACT_APP_LOG_LEVEL`
+- `process.env.REACT_APP_HEALTHCHECK_PATH`
+- `process.env.REACT_APP_FEATURE_FLAGS`
+- `process.env.REACT_APP_EXPERIMENTS_ENABLED`
 
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
+Access safely with a fallback:
+```js
+const apiBase = process.env.REACT_APP_API_BASE || '';
+```
+Or via ThemeProvider context:
+```js
+import { useContext } from 'react';
+import { ThemeContext } from '../theme/ThemeProvider';
+const { getEnv } = useContext(ThemeContext);
+const apiBase = getEnv('API_BASE', '');
+```
 
-## Learn More
+## Extending
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Create a new page in `src/pages/MyPage.js`
+- Add a route in `src/App.js`:
+```jsx
+<Route path="/my-page" element={<MyPage />} />
+```
+- Add navigation link in `src/components/layout/Sidebar.js`
 
-### Code Splitting
+For new UI elements:
+- Build a reusable component under `src/components/ui/`
+- Style with CSS variables; keep transitions subtle and modern
+- Ensure keyboard focus styles are visible (uses `--color-ring`)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Accessibility & Responsiveness
 
-### Analyzing the Bundle Size
+- Sidebar collapses on smaller screens
+- Focus rings are visible
+- Header is sticky; main content uses fluid grid where applicable
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Notes
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Light theme only for now; dark mode can be added by extending tokens and toggling a root attribute.
+- Minimal dependencies; no heavy UI libraries to keep bundle small.

@@ -1,0 +1,28 @@
+.app-shell__body {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* Make sure header height matches Sidebar sticky calc */
+.app-header {
+  height: 64px;
+}
+
+/* Responsive layout adjustments */
+@media (max-width: 900px) {
+  .app-shell__body {
+    gap: var(--space-md);
+    padding: var(--space-md);
+  }
+}
